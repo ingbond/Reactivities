@@ -4,3 +4,4 @@ obj
 appsettings.json
 *.db
 /.vs/Reactivities
+/client-app/package-lock.json

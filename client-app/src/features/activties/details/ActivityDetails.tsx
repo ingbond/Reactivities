@@ -1,32 +1,35 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card, Image, Button, ButtonGroup } from "semantic-ui-react";
 import { IActivity } from "../../../app/models/activity";
+import ActivityStore from '../../../app/stores/activityStore';
+import { observer } from "mobx-react-lite";
 
 interface IProps {
-  activity: IActivity;
   setEditMode: (editMode: boolean) => void;
 
   setSelectedActivity: (activity: IActivity | null) => void;
 }
 
-export const ActivityDetails: React.FC<IProps> = ({
-  activity,
+const ActivityDetails: React.FC<IProps> = ({
   setEditMode,
   setSelectedActivity
 }) => {
+  const activityStore = useContext(ActivityStore);
+  const {selectedActivity: activity} = activityStore;
+  
   return (
     <Card fluid>
       <Image
-        src={`/assets/categoryImages/${activity.category}.jpg`}
+        src={`/assets/categoryImages/${activity!.category}.jpg`}
         wrapped
         ui={false}
       />
       <Card.Content>
-        <Card.Header>{activity.title}</Card.Header>
+        <Card.Header>{activity!.title}</Card.Header>
         <Card.Meta>
-          <span className="date">{activity.date}</span>
+          <span className="date">{activity!.date}</span>
         </Card.Meta>
-        <Card.Description>{activity.description}</Card.Description>
+        <Card.Description>{activity!.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <ButtonGroup widths={2}>
@@ -42,3 +45,5 @@ export const ActivityDetails: React.FC<IProps> = ({
     </Card>
   );
 };
+
+export default observer(ActivityDetails);

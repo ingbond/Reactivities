@@ -8,6 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import ActivityStore from "../../../app/stores/activityStore";
 import { IActivity } from "../../../app/models/activity";
+import { format } from 'date-fns';
 
 interface IProps {
   activity: IActivity;
@@ -35,7 +36,7 @@ const ActivityListItem: React.FC<IProps> = ({ activity }) => {
         </Item.Group>
       </Segment>
       <Segment>
-        <Icon name="clock"></Icon> {activity.date}
+        <Icon name="clock"></Icon> {format(activity.date, 'h:mm a')}
         <Icon name="marker"></Icon> {activity.venue}, {activity.city}
       </Segment>
       <Segment secondary>Attendees will go here</Segment>

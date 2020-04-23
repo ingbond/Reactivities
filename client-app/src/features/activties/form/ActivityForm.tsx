@@ -1,13 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  Segment,
-  Form,
-  Button,
-  Grid,
-  GridColumn,
-} from "semantic-ui-react";
+import { Segment, Form, Button, Grid, GridColumn } from "semantic-ui-react";
 import { v4 as uuid } from "uuid";
-import { IActivityFormValues, ActivityFormValues } from "../../../app/models/activity";
+import {
+  IActivityFormValues,
+  ActivityFormValues,
+} from "../../../app/models/activity";
 import ActivityStore from "../../../app/stores/activityStore";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps } from "react-router-dom";
@@ -18,6 +15,20 @@ import SelectInput from "../../../app/common/form/SelectInput";
 import { category } from "../../../app/common/options/categoryOptions";
 import DateInput from "../../../app/common/form/DateInput";
 import { combineDateAndTime } from "../../../app/common/util/util";
+import {combineValidators, isRequired, composeValidators, hasLengthGreaterThan} from 'revalidate';
+
+const validate = combineValidators({
+  title: isRequired({message: 'The event title is required'}),
+  category: isRequired({message: 'The category is required'}),
+  description: composeValidators(
+    isRequired('Description'),
+    hasLengthGreaterThan(4)({message: 'Description need more symbols'})
+  )(),
+  city: isRequired('City'),
+  venue: isRequired('Venue'),
+  date: isRequired('Date'),
+  time: isRequired('Time')
+});
 
 interface DetailParams {
   id: string;
@@ -42,60 +53,37 @@ export const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
   useEffect(() => {
     if (match.params.id) {
       setLoading(true);
-      loadActivity(match.params.id).then(
-        (activity) => setActivity(new ActivityFormValues(activity))
-      ).finally(() => setLoading(false));
+      loadActivity(match.params.id)
+        .then((activity) => setActivity(new ActivityFormValues(activity)))
+        .finally(() => setLoading(false));
     }
-  }, [
-    loadActivity, 
-    match.params.id,
-  ]);
-
-  // const handleSubmit = () => {
-  //   if (activity.id.length === 0) {
-  //     let newActivity = {
-  //       ...activity,
-  //       id: uuid(),
-  //     };
-  //     createActivity(newActivity).then(() =>
-  //       history.push(`/activities/${newActivity.id}`)
-  //     );
-  //   } else {
-  //     editActivity(activity).then(() =>
-  //       history.push(`/activities/${activity.id}`)
-  //     );
-  //   }
-  // };
+  }, [loadActivity, match.params.id]);
 
   const handleFinalFormSubmit = (values: any) => {
     const dateAndTime = combineDateAndTime(values.date, values.time);
-    const {date, time, ...activity} = values;
+    const { date, time, ...activity } = values;
     activity.date = dateAndTime;
-    
+
     if (!activity.id) {
-          let newActivity = {
-            ...activity,
-            id: uuid(),
-          };
-          createActivity(newActivity).then(() =>
-            history.push(`/activities/${newActivity.id}`)
-          );
-        } else {
-          editActivity(activity).then(() =>
-            history.push(`/activities/${activity.id}`)
-          );
-        }
-      
+      let newActivity = {
+        ...activity,
+        id: uuid(),
+      };
+      createActivity(newActivity);
+    } else {
+      editActivity(activity);
+    }
   };
 
   return (
     <Grid>
       <GridColumn width={10}>
-        <Segment clearing >
+        <Segment clearing>
           <FinalForm
+          validate={validate}
             initialValues={activity}
             onSubmit={handleFinalFormSubmit}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, invalid, pristine }) => (
               <Form onSubmit={handleSubmit} loading={loading}>
                 <Field
                   name="title"
@@ -148,7 +136,7 @@ export const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
                   value={activity.venue}
                 ></Field>
                 <Button
-                  disabled={loading}
+                  disabled={loading || invalid || pristine}
                   loading={submitting}
                   floated="right"
                   positive
@@ -156,7 +144,11 @@ export const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
                   content="Submit"
                 ></Button>
                 <Button
-                  onClick={() => history.push("/activities")}
+                  onClick={
+                    activity.id
+                      ? () => history.push(`/activities/${activity.id}`)
+                      : () => history.push("/activities")
+                  }
                   disabled={loading}
                   floated="right"
                   type="button"

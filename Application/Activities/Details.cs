@@ -1,7 +1,9 @@
 ﻿using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,9 +27,11 @@ namespace Application.Activities
 
             public async Task<Activity> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id);
+                var test = _context.Activities.ToList();
+                var test2 = test.First(x => x.Id == request.Id);
+                //var activity = _context.Activities.First(x => x.Id == request.Id);
 
-                return activity;
+                return test2;
             }
         }
     }

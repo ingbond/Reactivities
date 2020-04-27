@@ -14,6 +14,7 @@ import ActivityForm from "../../features/activties/form/ActivityForm";
 import ActivityDetails from "../../features/activties/details/ActivityDetails";
 import NotFound from "./NotFound";
 import {ToastContainer} from 'react-toastify';
+import LoginForm from "../../features/user/LoginForm";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
@@ -41,6 +42,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                   key={location.key}
                   component={ActivityForm}
                 ></Route>
+                <Route path='/login' component={LoginForm}></Route>
                 <Route component={NotFound}></Route>
               </Switch>
             </Container>

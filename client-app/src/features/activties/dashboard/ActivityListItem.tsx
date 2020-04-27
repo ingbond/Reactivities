@@ -9,14 +9,15 @@ import { Link } from "react-router-dom";
 import ActivityStore from "../../../app/stores/activityStore";
 import { IActivity } from "../../../app/models/activity";
 import { format } from 'date-fns';
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 interface IProps {
   activity: IActivity;
 }
 
 const ActivityListItem: React.FC<IProps> = ({ activity }) => {
-  const activityStore = useContext(ActivityStore);
-  const {  } = activityStore;
+  const rootStore = useContext(RootStoreContext);
+  const {  } = rootStore.activityStore;
 
   return (
     <Segment.Group>

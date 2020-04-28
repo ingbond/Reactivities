@@ -62,7 +62,7 @@ const RegisterForm = () => {
           ></Field>
           {submitError && (
               
-            <ErrorMessage error={submitError} text={JSON.stringify(submitError.data.errors)}></ErrorMessage>
+            <ErrorMessage error={submitError} ></ErrorMessage>
           )}
           <Button
             disabled={(invalid && !dirtySinceLastSubmit) || pristine}

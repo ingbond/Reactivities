@@ -48,6 +48,7 @@ const RegisterForm = () => {
             component={TextInput}
             placeholder="Username"
           ></Field>
+
           <Field
             name="displayName"
             component={TextInput}
@@ -60,10 +61,7 @@ const RegisterForm = () => {
             placeholder="password"
             type="password"
           ></Field>
-          {submitError && (
-              
-            <ErrorMessage error={submitError} ></ErrorMessage>
-          )}
+          {submitError && <ErrorMessage error={submitError}></ErrorMessage>}
           <Button
             disabled={(invalid && !dirtySinceLastSubmit) || pristine}
             loading={submitting}

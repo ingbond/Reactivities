@@ -45,6 +45,7 @@ namespace API
             {
                 opt.UseLazyLoadingProxies();
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Persistence"));
+                opt.EnableSensitiveDataLogging();
             });
 
             services.AddCors(opt => opt.AddPolicy("CorsPolicy", policy =>

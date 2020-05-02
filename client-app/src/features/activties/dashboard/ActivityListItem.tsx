@@ -10,6 +10,7 @@ import ActivityStore from "../../../app/stores/activityStore";
 import { IActivity } from "../../../app/models/activity";
 import { format } from 'date-fns';
 import { RootStoreContext } from "../../../app/stores/rootStore";
+import ActivityListItemAttendees from "./ActivityListItemAttendees";
 
 interface IProps {
   activity: IActivity;
@@ -40,7 +41,7 @@ const ActivityListItem: React.FC<IProps> = ({ activity }) => {
         <Icon name="clock"></Icon> {format(activity.date, 'h:mm a')}
         <Icon name="marker"></Icon> {activity.venue}, {activity.city}
       </Segment>
-      <Segment secondary>Attendees will go here</Segment>
+      <Segment secondary><ActivityListItemAttendees attendees={activity.attendees}></ActivityListItemAttendees></Segment>
       <Segment clearing>
         <span>{activity.description}</span>
         <Button

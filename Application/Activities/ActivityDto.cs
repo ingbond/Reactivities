@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -16,6 +17,7 @@ namespace Application.Activities
         public string Venue { get; set; }
 
         [JsonPropertyName("attendees")]
-        public ICollection<AttendeeDto> UserActivities { get; set; }
+        [ModelBinder(Name = "attendees")]
+        public ICollection<AttendeeDto> Attendees { get; set; }
     }
 }

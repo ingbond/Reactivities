@@ -10,7 +10,10 @@ namespace Application.Activities
     {
         public MappingProfile()
         {
-            CreateMap<Activity, ActivityDto>();
+            CreateMap<Activity, ActivityDto>()
+                .ForMember(dest =>
+                    dest.Attendees,
+                    o => o.MapFrom(s => s.UserActivities));
             CreateMap<UserActivity, AttendeeDto>()
                 .ForMember(dest => 
                     dest.Username,

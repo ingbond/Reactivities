@@ -30,13 +30,10 @@ namespace Application.Activities
 
             public async Task<ActivityDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                var test = _context.Activities
-                    .ToList();
+                
+                var activity = await _context.Activities.FindAsync(request.Id);
 
-                var test2 = test.First(x => x.Id == request.Id);
-                //var activity = _context.Activities.First(x => x.Id == request.Id);
-
-                var activityToReturn = _mapper.Map<Activity, ActivityDto>(test2);
+                var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
 
                 return activityToReturn;
             }

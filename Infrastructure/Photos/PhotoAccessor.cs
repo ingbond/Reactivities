@@ -14,7 +14,7 @@ namespace Infrastructure.Photos
         private readonly Cloudinary _cloudinary;
         public PhotoAccessor(IOptions<CloudinarySettings> config)
         {
-            var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiKey);
+            var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
             _cloudinary = new Cloudinary(acc);
         }
 
@@ -28,12 +28,16 @@ namespace Infrastructure.Photos
                 {
                     var uploadParams = new ImageUploadParams
                     {
-                        File = new FileDescription(file.FileName, stream)
+                        File = new FileDescription(file.FileName, stream),
+                        Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face")
                     };
 
                     uploadResult = _cloudinary.Upload(uploadParams);
                 }
             }
+
+            if (uploadResult.Error != null)
+                throw new Exception(uploadResult.Error.Message);
 
             return new PhotoUploadResult
             {

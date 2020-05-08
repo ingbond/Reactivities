@@ -48,7 +48,11 @@ namespace Infrastructure.Photos
 
         public string DeletePhoto(string publicId)
         {
-            throw new NotImplementedException();
+            var deletePatams = new DeletionParams(publicId);
+
+            var result = _cloudinary.Destroy(deletePatams);
+
+            return result.Result == "ok" ? result.Result : null;
         }
 
     }
